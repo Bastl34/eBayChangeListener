@@ -4,24 +4,29 @@
 const request = require('request');
 const cheerio = require('cheerio');
 const nodemailer = require('nodemailer');
+const moment = require('moment');
 
 //config
 const config = require('./config');
 const userConfig = require('./config.user');
 
+//set moment locale
+moment.locale(userConfig.locale);
+
 //mail
 let mailTransporter = nodemailer.createTransport(`smtps://${encodeURIComponent(userConfig.mail.user)}:${encodeURIComponent(userConfig.mail.pass)}@${userConfig.mail.host}`);
 
 //exception
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', function (err)
+{
     console.error(err);
 	process.exit(1);
     //console.log("Node NOT Exiting...");
     //callback(true,null);
-  });
+});
 
 //vars
-let lastItems = [];
+let lastItems = {};
 
 console.log("looking for new search entries...");
 
@@ -61,7 +66,8 @@ function doRequest()
 					price: "",
 					priceFormat: "",
 					shipping: "",
-					time: ""
+					time: "",
+					timestamp: 0
 				};
 
 				//id
@@ -93,6 +99,11 @@ function doRequest()
 
 				//time
 				item.time = $(this).find(".timeleft span span").text().trim();
+				
+				if (userConfig.locale == "de")
+					item.time = item.time.replace("Sep","Sept").replace("Feb","Febr")
+				
+				item.timestamp = moment(item.time, userConfig.dateFormat).valueOf();
 
 				//shipping
 				item.shipping = $(this).find(".lvshipping span span span").text().trim();
@@ -105,11 +116,14 @@ function doRequest()
 			//check if something is new
 			let newItems = getNewElements(lastItems,items,"id");
 
-			if (lastItems.length > 0 && newItems.length > 0)
+			if (Object.keys(lastItems).length > 0 && newItems.length > 0)
 				notify(newItems);
 
 			//save last items
-			lastItems = items;
+			items.forEach((item) =>
+			{
+				lastItems[item.id] = item;
+			});
 
 		}
 		else
@@ -119,7 +133,8 @@ function doRequest()
 
 function getNewElements(oldList,newList,compareKey)
 {
-	if (!oldList || oldList.length == 0)
+
+	if (!oldList || Object.keys(oldList).length == 0)
 		return newList;
 
 	if(!newList || newList.length == 0)
@@ -129,15 +144,16 @@ function getNewElements(oldList,newList,compareKey)
 
 	newList.forEach((newElem) =>
 	{
-		let found = false;
+		//check if item already added to list
+		let isInList = (newElem.id in oldList);
 
-		oldList.forEach((oldElem) =>
-		{
-			if(newElem[compareKey] == oldElem[compareKey])
-				found = true;
-		});
+		//check if entry is to old
+		let toOld = false;
+		let now = new Date().getTime();
+		if (config.ignoreInterval > 0 && newElem.timestamp <= now - config.ignoreInterval)
+			toOld = true;
 
-		if (!found)
+		if (!isInList && !toOld)
 			newItems.push(newElem);
 	});
 
