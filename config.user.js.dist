@@ -1,0 +1,13 @@
+var userConfig =
+{
+	searchUrl: "http://www.ebay.com/sch/i.html?_from=R40&_sacat=0&_nkw=smartphone&_sop=10",
+	mail: {
+        host: "smtp.gmail.com",
+        user: "USERNAME",
+        pass: "PASS",
+        from: "eBayChangeListener FROMADDR",
+        to: "TOADDR"
+    }
+};
+
+module.exports = userConfig;

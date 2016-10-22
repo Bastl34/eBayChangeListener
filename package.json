@@ -1,0 +1,16 @@
+{
+    "name": "ebay-change-listener",
+    "version": "1.0.0",
+    "description": "A ebay search change listener",
+    "readmeFilename": "README.md",
+    "license" : "MIT",
+    "repository": "npm/npm",
+    "main": "index.js",
+    "dependencies":
+    {
+        "request": "^2.75.0",
+        "cheerio":"^0.22.0",
+        "nodemailer":"^2.6.4"
+    },
+    "keywords": []
+}
