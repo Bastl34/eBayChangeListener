@@ -42,8 +42,16 @@ function doRequest()
 
 			let items = [];
 			
+			let fromInternationalResults = false;
+			
 			//loop over all items
 			$("#ListViewInner").children("li").each(function(i, elem) {
+				
+				if (!$(this).hasClass("sresult"))
+					fromInternationalResults = true;
+								
+				if (userConfig.filterInternationalResults && fromInternationalResults)
+					return;
 
 				let item = {
 					id: "",
