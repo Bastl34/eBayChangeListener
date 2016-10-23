@@ -1,10 +1,17 @@
 var userConfig =
 {
-	searchUrl: "http://www.ebay.com/sch/i.html?_from=R40&_sacat=0&_nkw=smartphone&_sop=10",
-	filterInternationalResults: true,
-    locale: "de",
-    dateFormat: "DD. MMM. HH:mm",
-	mail: {
+    searchs:
+    [
+        {
+            name: "Smartphone",
+            url: "http://www.ebay.com/sch/i.html?_from=R40&_sacat=0&_nkw=smartphone&_sop=10",
+            filterInternationalResults: true
+        },
+    ],
+    locale: "",
+    dateFormat: "MMM-DD HH:mm",
+	mail:
+    {
         host: "smtp.gmail.com",
         user: "USERNAME",
         pass: "PASS",

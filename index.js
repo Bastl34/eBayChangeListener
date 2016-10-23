@@ -21,8 +21,6 @@ process.on('uncaughtException', function (err)
 {
     console.error(err);
 	process.exit(1);
-    //console.log("Node NOT Exiting...");
-    //callback(true,null);
 });
 
 //vars
@@ -30,16 +28,19 @@ let lastItems = {};
 
 console.log("looking for new search entries...");
 
-setInterval(()=>
+searchs.forEach((search) =>
 {
-	doRequest();
-},config.timerInterval);
-doRequest();
+	setInterval(()=>
+	{
+		doRequest(search);
+	},config.timerInterval);
+	doRequest(search);
+});
 
 
-function doRequest()
+function doRequest(search)
 {
-	request(userConfig.searchUrl, function (error, response, body)
+	request(search.url, function (error, response, body)
 	{
 		if (!error && response.statusCode == 200)
 		{
@@ -55,7 +56,7 @@ function doRequest()
 				if (!$(this).hasClass("sresult"))
 					fromInternationalResults = true;
 								
-				if (userConfig.filterInternationalResults && fromInternationalResults)
+				if (search.filterInternationalResults && fromInternationalResults)
 					return;
 
 				let item = {
@@ -117,7 +118,7 @@ function doRequest()
 			let newItems = getNewElements(lastItems,items,"id");
 
 			if (Object.keys(lastItems).length > 0 && newItems.length > 0)
-				notify(newItems);
+				notify(newItems,search.name);
 
 			//save last items
 			items.forEach((item) =>
@@ -160,16 +161,18 @@ function getNewElements(oldList,newList,compareKey)
 	return newItems;
 }
 
-function notify(newItems)
+function notify(newItems,name)
 {
-
 	newItems.forEach((item) =>
 	{
 		console.log("("+(new Date())+") new item: "+item.name);
 	});
 
 	let mail = createMail(newItems);
-	sendMail("New Search Items",mail);
+	if (name)
+		sendMail("New Search Items for "+name,mail);
+	else
+		sendMail("New Search Items",mail);
 }
 
 function createMail(items)
@@ -240,24 +243,3 @@ function sendMail(subject,msg,callback)
 			callback(error);
 	});
 }
-
-/*
-let test = [{ id: 'item43f7b65dfc',
-  image: 'http://thumbs.ebaystatic.com/images/g/98MAAOSwLF1YBWG2/s-l225.jpg',
-  name: 'Apple iPhone 5S 64GB Black - Verizon AT&T T-Mobile Unlocked GSM 7102764',
-  link: 'http://www.ebay.com/itm/Apple-iPhone-5S-64GB-Black-Verizon-AT-T-T-Mobile-Unlocked-GSM-7102764-/291918732796?hash=item43f7b65dfc:g:~pYAAOSwB09YCp~p',  price: '$257.00$699.99',
-  priceFormat: 'Buy It Now',
-  shipping: '',
-  time: 'Oct-21 16:08' },{ id: 'item43f7b65dfc',
-  image: 'http://thumbs.ebaystatic.com/images/g/98MAAOSwLF1YBWG2/s-l225.jpg',
-  name: 'Apple iPhone 5S 64GB Black - Verizon AT&T T-Mobile Unlocked GSM 7102764',
-  link: 'http://www.ebay.com/itm/Apple-iPhone-5S-64GB-Black-Verizon-AT-T-T-Mobile-Unlocked-GSM-7102764-/291918732796?hash=item43f7b65dfc:g:~pYAAOSwB09YCp~p',  price: '$257.00$699.99',
-  priceFormat: 'Buy It Now',
-  shipping: '',
-  time: 'Oct-21 16:08' }];
-
-let mailItem = createMail(test);
-
-console.log(mailItem);
-*/
-//sendMail("test","test test");
