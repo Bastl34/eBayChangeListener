@@ -28,15 +28,19 @@ let lastItems = {};
 
 console.log("looking for new search entries...");
 
-searchs.forEach((search) =>
+for(let i=0;i<userConfig.searchs.length;++i)
 {
+	let search = userConfig.searchs[i];
+	search.id = i;
+
+	lastItems[search.id] = {};
+
 	setInterval(()=>
 	{
 		doRequest(search);
 	},config.timerInterval);
 	doRequest(search);
-});
-
+}
 
 function doRequest(search)
 {
@@ -115,15 +119,15 @@ function doRequest(search)
 			});
 
 			//check if something is new
-			let newItems = getNewElements(lastItems,items,"id");
+			let newItems = getNewElements(lastItems[search.id],items,"id");
 
-			if (Object.keys(lastItems).length > 0 && newItems.length > 0)
+			if (Object.keys(lastItems[search.id]).length > 0 && newItems.length > 0)
 				notify(newItems,search.name);
 
 			//save last items
 			items.forEach((item) =>
 			{
-				lastItems[item.id] = item;
+				lastItems[search.id][item.id] = item;
 			});
 
 		}
