@@ -165,7 +165,7 @@ function getNewElements(oldList,newList,compareKey)
 	return newItems;
 }
 
-function notify(newItems,name)
+function notify(newItems, name)
 {
 	newItems.forEach((item) =>
 	{
@@ -228,14 +228,13 @@ function createMail(items)
 
 		innerContent += entry;
 	}
-	
 
 	return mailOuter.replace("INNER",innerContent);
 }
 
 function sendMail(subject,msg,callback)
 {
-	let mail =  Object.assign({ subject:subject, html: msg }, { from: userConfig.mail.from, to: userConfig.mail.to });
+	let mail = Object.assign({ subject:subject, html: msg }, { from: userConfig.mail.from, to: userConfig.mail.to });
 	mailTransporter.sendMail(mail, function(error, info) {
 		if(error) {
 			console.warn('could not send eMail',"eMail",error);
