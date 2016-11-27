@@ -33,6 +33,8 @@ for(let i=0;i<userConfig.searchs.length;++i)
 	let search = userConfig.searchs[i];
 	search.id = i;
 
+	console.log("lookipng for: "+search.name);
+
 	lastItems[search.id] = {};
 
 	setInterval(()=>
