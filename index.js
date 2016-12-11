@@ -57,15 +57,16 @@ function doRequest(search)
 			let fromInternationalResults = false;
 			
 			//loop over all items
-			$("#ListViewInner").children("li").each(function(i, elem) {
-				
+			$("#ListViewInner").children("li").each(function(i, elem)
+			{
 				if (!$(this).hasClass("sresult"))
 					fromInternationalResults = true;
 								
 				if (search.filterInternationalResults && fromInternationalResults)
 					return;
 
-				let item = {
+				let item =
+				{
 					id: "",
 					name: "",
 					image: "",
@@ -237,12 +238,12 @@ function createMail(items)
 function sendMail(subject,msg,callback)
 {
 	let mail = Object.assign({ subject:subject, html: msg }, { from: userConfig.mail.from, to: userConfig.mail.to });
-	mailTransporter.sendMail(mail, function(error, info) {
-		if(error) {
+	mailTransporter.sendMail(mail, function(error, info)
+	{
+		if(error)
 			console.warn('could not send eMail',"eMail",error);
-		} else {
+		else
 			console.log('eMail sent: ' + info.response);
-		}
 
 		if (callback)
 			callback(error);
