@@ -145,7 +145,7 @@ function doRequest(search)
 				else
 					item.pickupOnly = true;
 
-				if (search.filterOnlyPickup && item.pickupOnly)
+				if (search.filterPickupOnly && item.pickupOnly)
 					return;
 
 				items.push(item);
