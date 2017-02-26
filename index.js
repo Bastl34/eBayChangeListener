@@ -74,6 +74,7 @@ function doRequest(search)
 					price: "",
 					priceFormat: "",
 					shipping: "",
+					pickupOnly: false,
 					time: "",
 					timestamp: 0
 				};
@@ -87,6 +88,25 @@ function doRequest(search)
 					item.name = $(link).text().replace("Neues Angebot","").replace("New listing","").trim();
 					item.link = $(link).attr('href');
 				});
+
+				//additional filter
+				if (search.additionalFilter)
+				{
+					let filters = search.additionalFilter.split(" ");
+					let found = false;
+
+					filters.forEach((filter) =>
+					{
+						filter = filter.toLowerCase();
+						let title = item.name.toLowerCase();
+
+						if (title.indexOf(filter) != -1)
+							found = true;
+					});
+
+					if (found)
+						return;
+				}
 
 				//image
 				item.image = $(this).find(".lvpicinner img").attr('imgurl');
@@ -107,7 +127,7 @@ function doRequest(search)
 
 				//time
 				item.time = $(this).find(".timeleft span span").text().trim();
-				
+
 				if (userConfig.locale == "de")
 					item.time = item.time.replace("Sep","Sept").replace("Feb","Febr")
 				
@@ -117,6 +137,16 @@ function doRequest(search)
 				item.shipping = $(this).find(".lvshipping span span span").text().trim();
 				if (item.shipping == "")
 					item.shipping = $(this).find(".lvshipping span span").text().trim();
+
+				//pickup only
+				let pickup = $(this).find(".lvshipping span").text().trim().toLowerCase();
+				if (pickup.indexOf("nur abholung") == -1 && pickup.indexOf("pickup") == -1)
+					item.pickupOnly = false;
+				else
+					item.pickupOnly = true;
+
+				if (search.filterOnlyPickup && item.pickupOnly)
+					return;
 
 				items.push(item);
 			});
@@ -132,7 +162,6 @@ function doRequest(search)
 			{
 				lastItems[search.id][item.id] = item;
 			});
-
 		}
 		else
 			console.log(error);
