@@ -7,7 +7,8 @@ var userConfig =
             url: "http://www.ebay.com/sch/i.html?_from=R40&_sacat=0&_nkw=smartphone&_sop=10",
             additionalFilter: '', // additional filter because ebay does not support filter only searches - separated by space
             filterInternationalResults: true,
-            filterPickupOnly: false
+            filterPickupOnly: false,
+            mailTo: null //if you want to use a different email addr for this search
         },
     ],
     locale: "",

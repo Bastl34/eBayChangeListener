@@ -155,7 +155,7 @@ function doRequest(search)
 			let newItems = getNewElements(lastItems[search.id],items,"id");
 
 			if (Object.keys(lastItems[search.id]).length > 0 && newItems.length > 0)
-				notify(newItems,search.name);
+				notify(newItems,search.name, search.mailTo);
 
 			//save last items
 			items.forEach((item) =>
@@ -197,7 +197,7 @@ function getNewElements(oldList,newList,compareKey)
 	return newItems;
 }
 
-function notify(newItems, name)
+function notify(newItems, name, mailTo)
 {
 	newItems.forEach((item) =>
 	{
@@ -206,9 +206,9 @@ function notify(newItems, name)
 
 	let mail = createMail(newItems);
 	if (name)
-		sendMail("New Search Items for "+name,mail);
+		sendMail("New Search Items for "+name, mail, mailTo);
 	else
-		sendMail("New Search Items",mail);
+		sendMail("New Search Items", mail, mailTo);
 }
 
 function createMail(items)
@@ -264,9 +264,9 @@ function createMail(items)
 	return mailOuter.replace("INNER",innerContent);
 }
 
-function sendMail(subject,msg,callback)
+function sendMail(subject, msg, mailTo, callback)
 {
-	let mail = Object.assign({ subject:subject, html: msg }, { from: userConfig.mail.from, to: userConfig.mail.to });
+	let mail = Object.assign({ subject:subject, html: msg }, { from: userConfig.mail.from, to: mailTo ? mailTo : userConfig.mail.to });
 	mailTransporter.sendMail(mail, function(error, info)
 	{
 		if(error)
