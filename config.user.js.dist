@@ -9,7 +9,7 @@ var userConfig =
             filterInternationalResults: true,
             filterPickupOnly: false,
             mailTo: null //if you want to use a different email addr for this search
-        },
+        }
     ],
     locale: "",
     dateFormat: "MMM-DD HH:mm",
