@@ -3,15 +3,14 @@
     "version": "1.0.0",
     "description": "A ebay search change listener",
     "readmeFilename": "README.md",
-    "license" : "MIT",
+    "license": "MIT",
     "repository": "npm/npm",
     "main": "index.js",
-    "dependencies":
-    {
-        "request": "^2.79.0",
-        "cheerio":"^0.22.0",
-        "nodemailer":"^3.1.4",
-        "moment": "^2.17.1"
+    "dependencies": {
+        "request": "^2.88.0",
+        "cheerio": "^1.0.0-rc.2",
+        "nodemailer": "^5.1.1",
+        "moment": "^2.24.0"
     },
     "keywords": []
 }
