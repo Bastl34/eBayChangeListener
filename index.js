@@ -53,15 +53,15 @@ function doRequest(search)
 			let $ = cheerio.load(body);
 
 			let items = [];
-			
+
 			let fromInternationalResults = false;
-			
+
 			//loop over all items
 			$("#ListViewInner").children("li").each(function(i, elem)
 			{
 				if (!$(this).hasClass("sresult"))
 					fromInternationalResults = true;
-								
+
 				if (search.filterInternationalResults && fromInternationalResults)
 					return;
 
@@ -82,7 +82,7 @@ function doRequest(search)
 				//id
 				item.id = $(this).attr("id");
 
-				//name and link			
+				//name and link
 				$(this).find(".lvtitle").find("a").each(function(i, link)
 				{
 					item.name = $(link).text().replace("Neues Angebot","").replace("New listing","").trim();
@@ -125,14 +125,6 @@ function doRequest(search)
 				//format
 				item.priceFormat = $(this).find(".lvformat span").text().replace("oder","").replace("or","").trim();
 
-				//time
-				item.time = $(this).find(".timeleft span span").text().trim();
-
-				if (userConfig.locale == "de")
-					item.time = item.time.replace("Sep","Sept").replace("Feb","Febr")
-				
-				item.timestamp = moment(item.time, userConfig.dateFormat).valueOf();
-
 				//shipping
 				item.shipping = $(this).find(".lvshipping span span span").text().trim();
 				if (item.shipping == "")
@@ -148,11 +140,13 @@ function doRequest(search)
 				if (search.filterPickupOnly && item.pickupOnly)
 					return;
 
+				items.timestamp = Date.now()
+
 				items.push(item);
 			});
 
 			//check if something is new
-			let newItems = getNewElements(lastItems[search.id],items,"id");
+			let newItems = getNewElements(lastItems[search.id],items);
 
 			if (Object.keys(lastItems[search.id]).length > 0 && newItems.length > 0)
 				notify(newItems,search.name, search.mailTo);
@@ -160,7 +154,7 @@ function doRequest(search)
 			//save last items
 			items.forEach((item) =>
 			{
-				lastItems[search.id][item.id] = item;
+				lastItems[search.id][item.id] = true;
 			});
 		}
 		else
@@ -168,30 +162,19 @@ function doRequest(search)
 	});
 }
 
-function getNewElements(oldList,newList,compareKey)
+function getNewElements(oldList,newList)
 {
+	if (newList.length == 0)
+		return [];
 
-	if (!oldList || Object.keys(oldList).length == 0)
+	if (oldList.length == 0 && newList.length > 0)
 		return newList;
 
-	if(!newList || newList.length == 0)
-		return [];
-	
 	let newItems = [];
-
 	newList.forEach((newElem) =>
 	{
-		//check if item already added to list
-		let isInList = (newElem.id in oldList);
-
-		//check if entry is to old
-		let toOld = false;
-		let now = new Date().getTime();
-		if (config.ignoreInterval > 0 && newElem.timestamp <= now - config.ignoreInterval)
-			toOld = true;
-
-		if (!isInList && !toOld)
-			newItems.push(newElem);
+		if (!(newElem.id in oldList))
+			newItems.push(newElem)
 	});
 
 	return newItems;
