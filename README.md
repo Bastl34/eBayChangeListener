@@ -9,7 +9,7 @@ You can define a eBay Search URL and get immediately notified by eMail when new 
 
 # Configure
 * copy config.user.js.dist to config.user.js
-  * `cp config.user.js.dist config.user.js.dist`
+  * `cp config.user.js.dist config.user.js`
 * configure your search:
   * enter a ebay search url:
     * search your product at ebay.com or .de
