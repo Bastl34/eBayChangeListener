@@ -30,7 +30,7 @@ You can define a eBay Search URL and get immediately notified by eMail when new 
 
     sudo npm install -g forever
     sudo npm install -g forever-service
-v
+
     #add new service
     sudo forever-service install ebayListener --script index.js --noGracefulShutdown --start
 
