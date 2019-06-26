@@ -1,9 +1,9 @@
-# eBay Change Listener
+# eBayChangeListener
 eBayChangeListener is a node.js eBay "Buy It Now" search result watcher.
 You can define a eBay Search URL and get immediately notified by eMail when new items where inserted.
 
 
-# install
+# Installation
 * clone this repository and run
   * `npm install`
 
@@ -22,11 +22,11 @@ You can define a eBay Search URL and get immediately notified by eMail when new 
   * if you are using gmail: enable usage for less secure apps in gmail
 
 
-# start
+# Start
 
     node index.js
 
-# start using forever service
+# Start using forever service
 
     sudo npm install -g forever
     sudo npm install -g forever-service
