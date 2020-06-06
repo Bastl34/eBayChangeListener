@@ -140,7 +140,7 @@ function doRequest(search)
 				if (search.filterPickupOnly && item.pickupOnly)
 					return;
 
-				items.timestamp = Date.now()
+				items.timestamp = Date.now();
 
 				items.push(item);
 			});
