@@ -37,5 +37,9 @@ You can define a eBay Search URL and get immediately notified by eMail when new 
     #if you want to uninstall the service
     sudo forever-service delete ebayListener
 
+# Start
+
+    npm run dev
+
 # Licence
 MIT (see License.md)
