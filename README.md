@@ -16,7 +16,7 @@ You can define an eBay Search URL and get immediately notified by eMail when new
     * Sorting: newly listed
     * Type: Buy It Now
     * Copy URL and paste it to `searchUrl`
-    * you nee do use the advanced search for this
+    * you neet to use the advanced search for this
 * set your `locale` (ebay.com = "", ebay.de = "de")
 * enter `mail` credentials for your smtp mail service (like gmail)
   * if you are using gmail: enable usage for less secure apps in gmail
