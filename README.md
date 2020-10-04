@@ -1,6 +1,7 @@
 # eBayChangeListener
 eBayChangeListener is a node.js eBay "Buy It Now" search result watcher.
 You can define an eBay Search URL and get immediately notified by eMail when new items where inserted.
+
 You can also look for bid based entries.
 
 
