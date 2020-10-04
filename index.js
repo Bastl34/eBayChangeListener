@@ -55,14 +55,23 @@ function doRequest(search)
 			let items = [];
 
 			let fromInternationalResults = false;
+			let fromLessQuerys = false;
 
 			//loop over all items
-			$("#ListViewInner").children("li").each(function(i, elem)
+			$("#srp-river-results ul").children().each(function(i, elem)
 			{
-				if (!$(this).hasClass("sresult"))
+				const htmlContent = $(this).html();
+
+				if (htmlContent.includes('international'))
 					fromInternationalResults = true;
 
+				if (htmlContent.includes('weniger Suchbegriffe') || htmlContent.includes('fewer words'))
+					fromLessQuerys = true;
+
 				if (search.filterInternationalResults && fromInternationalResults)
+					return;
+
+				if (fromLessQuerys)
 					return;
 
 				let item =
@@ -80,14 +89,16 @@ function doRequest(search)
 				};
 
 				//id
-				item.id = $(this).attr("id");
+				const match = htmlContent.match(/\/([0-9]{5,20})/);
+
+				if (!match)
+					return;
+
+				item.id = match[1];
 
 				//name and link
-				$(this).find(".lvtitle").find("a").each(function(i, link)
-				{
-					item.name = $(link).text().replace("Neues Angebot","").replace("New listing","").trim();
-					item.link = $(link).attr('href');
-				});
+				item.name = $(this).find("a h3").text().replace("Neues Angebot","").replace("New listing","").trim();
+				item.link = $(this).find(".s-item__info a").attr('href');
 
 				//additional filter
 				if (search.additionalFilter)
@@ -109,30 +120,22 @@ function doRequest(search)
 				}
 
 				//image
-				item.image = $(this).find(".lvpicinner img").attr('imgurl');
-				if (!item.image)
-					item.image = $(this).find(".lvpicinner img").attr('src');
+				item.image = $(this).find(".s-item__image-wrapper img").attr('src');
 
 				//price
-				item.price = ""+$(this).find(".lvprice span").text().trim().replace(/(EUR)/,"$1");
-
-				const regex = /(.*?)\n/;
-				let m;
-
-				if ((m = regex.exec(item.price)) !== null)
-					item.price = m[1];
+				item.price = ""+$(this).find(".s-item__price").text().trim();
 
 				//format
-				item.priceFormat = $(this).find(".lvformat span").text().replace("oder","").replace("or","").trim();
+				//bids or by it now
+				item.priceFormat = $(this).find(".s-item__bids").text().replace("oder","").replace("or","").trim();
+				if (!item.priceFormat)
+					item.priceFormat = $(this).find(".s-item__purchase-options-with-icon").text().replace("oder","").replace("or","").trim();
 
 				//shipping
-				item.shipping = $(this).find(".lvshipping span span span").text().trim();
-				if (item.shipping == "")
-					item.shipping = $(this).find(".lvshipping span span").text().trim();
+				item.shipping = $(this).find(".s-item__shipping").text().trim();
 
 				//pickup only
-				let pickup = $(this).find(".lvshipping span").text().trim().toLowerCase();
-				if (pickup.indexOf("nur abholung") == -1 && pickup.indexOf("pickup") == -1)
+				if (item.shipping.trim())
 					item.pickupOnly = false;
 				else
 					item.pickupOnly = true;
@@ -146,7 +149,7 @@ function doRequest(search)
 			});
 
 			//check if something is new
-			let newItems = getNewElements(lastItems[search.id],items);
+			let newItems = getNewElements(lastItems[search.id], items);
 
 			if (Object.keys(lastItems[search.id]).length > 0 && newItems.length > 0)
 				notify(newItems,search.name, search.mailTo);
@@ -154,6 +157,9 @@ function doRequest(search)
 			//save last items
 			items.forEach((item) =>
 			{
+				if (!(item.id in lastItems[search.id]))
+					console.log(item.name);
+
 				lastItems[search.id][item.id] = true;
 			});
 		}
