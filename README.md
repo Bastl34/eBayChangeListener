@@ -48,14 +48,14 @@ npm run dev
 # Start using forever service
 
 ```
-  sudo npm install -g forever
-  sudo npm install -g forever-service
+sudo npm install -g forever
+sudo npm install -g forever-service
 
-  #add new service
-  sudo forever-service install ebayListener --script index.js --noGracefulShutdown --start
+#add new service
+sudo forever-service install ebayListener --script index.js --noGracefulShutdown --start
 
-  #if you want to uninstall the service
-  sudo forever-service delete ebayListener
+#if you want to uninstall the service
+sudo forever-service delete ebayListener
 ```
 
 # Licence
