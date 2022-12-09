@@ -11,7 +11,7 @@
     },
     "dependencies": {
         "request": "^2.88.2",
-        "cheerio": "^1.0.0-rc.3",
+        "cheerio": "^1.0.0-rc.12",
         "nodemailer": "^6.6.1",
         "moment": "^2.29.2"
     },
